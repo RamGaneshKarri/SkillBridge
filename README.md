@@ -23,7 +23,7 @@ Use the following credentials to explore the different Role-Based Access Control
     *   Password: `Sandeep@123`
 *   **Programme Manager:**
     *   Email: `ramganeshkarri@gmail.com`
-    *   Password: `[Please update password here]`
+    *   Password: `Ganesh@123`
 *   **Monitoring Officer:**
     *   Email: `sachinguthala@gmail.com`
     *   Password: `Sachin@123`
