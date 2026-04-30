@@ -1,167 +1,88 @@
-# SkillBridge — Role-Based Attendance Management System
+# SkillBridge: Role-Based Attendance Management System
 
-A full-stack attendance management platform for state-level skilling programmes, supporting **5 distinct user roles** with real-time data, role-based access control, and a modern responsive interface.
+Welcome to the SkillBridge repository. If you are just joining the team, this document will give you a clear overview of what this project is, how the architecture is set up, and how you can get it running on your local machine.
 
-## 🎯 Project Overview
+## Project Overview
 
-SkillBridge enables institutions, trainers, and students to manage attendance across batches and sessions — while programme managers and monitoring officers gain oversight through aggregated summaries and analytics.
+SkillBridge is a full-stack platform designed to manage attendance across state-level skilling programmes. The core complexity of this application lies in its multi-tenant, multi-role design. We have five distinct user roles that interact with the system in completely different ways. 
 
-### User Roles
+Our goal with this platform is to allow trainers and students to handle the day-to-day operations (like marking attendance and joining batches), while providing high-level, aggregated analytics to institutions and programme managers.
 
-| Role | Capabilities |
-|------|-------------|
-| **Student** | View enrolled batches, join via invite links, mark attendance (present/absent/late) |
-| **Trainer** | Create batches & sessions, generate invite links, view per-session attendance |
-| **Institution** | Manage batches & trainers, view attendance summaries with progress indicators |
-| **Programme Manager** | Oversee all institutions, view cross-institution analytics & programme-wide summary |
-| **Monitoring Officer** | Read-only access to programme-wide data (no create/edit actions) |
+### The Five User Roles
 
-## 🏗️ Architecture
+To understand the codebase, you first need to understand who is using it. Here is how permissions are divided:
 
-```
-Frontend (React + Vite + Tailwind CSS)
-    ↓ Firebase Auth (ID Token)
-Backend (Express.js + Firebase Admin SDK)
-    ↓ Verified Token + Role Check
-Database (Cloud Firestore)
-```
+*   **Student**: The end-user. They can view the batches they are enrolled in, join new batches using secure invite links, and log their daily attendance.
+*   **Trainer**: The ground-level operators. They are responsible for creating batches, generating invite links for students, creating daily sessions, and reviewing attendance logs.
+*   **Institution**: The administrative layer. Institutions manage their trainers and have access to dashboard summaries to see how their specific batches are performing.
+*   **Programme Manager**: The high-level overseer. They have access to system-wide analytics, allowing them to track performance across all institutions simultaneously.
+*   **Monitoring Officer**: A strict read-only role. They can view the same high-level data as Programme Managers but cannot modify any records.
 
-**Key design decision:** Firebase provides a unified platform for auth and database, reducing integration complexity and eliminating the need for a separate database service. Server-side role verification on every API call ensures security is not just frontend gating.
+## Architecture and Design Decisions
 
-## 🛠️ Tech Stack
+We went with a MERN-like stack, but opted to lean heavily into Firebase for authentication and database management to reduce infrastructure overhead.
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, Vite 8, Tailwind CSS 4 |
-| Backend | Node.js, Express.js |
-| Database | Cloud Firestore |
-| Auth | Firebase Authentication (Email/Password) |
-| Deployment | Vercel (frontend) + Render (backend) |
+**Frontend:**
+The client is built with React 19 and Vite 8, utilizing Tailwind CSS 4 for styling. We built a custom Role-Based Access Control (RBAC) layer into the frontend using a `ProtectedRoute` component that intercepts navigation attempts and verifies both authentication status and role access.
 
-## 📁 Project Structure
+**Backend:**
+The server is a standard Node.js and Express application. It acts as a middleman between the client and our Firestore database. We use the Firebase Admin SDK to interact with the database securely.
 
-```
+**Security Philosophy:**
+We do not rely on the frontend for security. Every single API route is protected by token verification middleware. Furthermore, sensitive routes are wrapped in a `roleCheck` middleware. Even if a user manages to spoof their role on the frontend, the server will reject unauthorized database reads/writes.
+
+## Repository Structure
+
+The codebase is split into two main directories. Here is a quick map to help you navigate:
+
+```text
 SkillBridge/
 ├── backend/
-│   ├── server.js              # Express entry point
-│   ├── config/firebase.js     # Firebase Admin SDK init
+│   ├── config/firebase.js     # Firebase Admin SDK initialization
 │   ├── middleware/
-│   │   ├── auth.js            # Token verification middleware
-│   │   └── roleCheck.js       # Role-based access control
-│   └── routes/
-│       ├── users.js           # User registration & profile
-│       ├── batches.js         # Batch CRUD, invite, join
-│       ├── sessions.js        # Session management
-│       ├── attendance.js      # Mark & view attendance
-│       └── summary.js         # Aggregated analytics
+│   │   ├── auth.js            # Intercepts and verifies Firebase ID tokens
+│   │   └── roleCheck.js       # Ensures the user has the required role for the route
+│   ├── routes/                # Express controllers split by domain (users, batches, sessions, etc.)
+│   └── server.js              # Application entry point
 ├── frontend/
 │   └── src/
-│       ├── config/firebase.js # Firebase client SDK
-│       ├── contexts/AuthContext.jsx
-│       ├── components/        # Layout, Navbar, Sidebar, ProtectedRoute
-│       ├── pages/
-│       │   ├── Login.jsx & Signup.jsx
-│       │   ├── JoinBatch.jsx
-│       │   ├── student/StudentDashboard.jsx
-│       │   ├── trainer/TrainerDashboard.jsx
-│       │   ├── institution/InstitutionDashboard.jsx
-│       │   ├── manager/ManagerDashboard.jsx
-│       │   └── monitor/MonitorDashboard.jsx
-│       └── utils/api.js       # Axios with auth interceptor
-├── CONTACT.txt
+│       ├── components/        # Reusable UI elements (Navbar, Sidebar, Layout)
+│       ├── config/firebase.js # Firebase Client SDK initialization
+│       ├── contexts/          # Contains our AuthContext for global state management
+│       ├── pages/             # View layer, heavily separated by user role
+│       └── utils/api.js       # Axios instance with global auth interceptors
 └── README.md
 ```
 
-## 🔐 Firestore Schema
+## Local Development Setup
 
-```
-users/{uid}
-  - name, email, role, institutionId, createdAt
+To get the application running on your local machine, you will need Node.js installed and access to our Firebase project.
 
-batches/{batchId}
-  - name, institutionId, trainerIds[], studentIds[], createdAt
+### 1. Start the Backend
 
-sessions/{sessionId}
-  - batchId, trainerId, title, date, startTime, endTime, createdAt
+1. Navigate to the backend directory: `cd backend`
+2. Install dependencies: `npm install`
+3. You will need the service account credentials. Ask a team lead for the `serviceAccountKey.json` file and place it in the root of the `backend/` directory, OR set the `FIREBASE_SERVICE_ACCOUNT_KEY` environment variable.
+4. Start the development server: `npm run dev`
 
-attendance/{attendanceId}
-  - sessionId, studentId, status ("present"|"absent"|"late"), markedAt
+The backend should now be running on port 5000.
 
-invites/{inviteId}
-  - batchId, token (unique), createdBy, used, createdAt
-```
+### 2. Start the Frontend
 
-## 🚀 Getting Started
+1. Open a new terminal and navigate to the frontend directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Start the Vite development server: `npm run dev`
 
-### Prerequisites
-- Node.js 18+
-- Firebase project with Auth & Firestore enabled
-- Firebase Admin SDK service account key
+The frontend should now be running on port 5173.
 
-### Backend Setup
+### 3. API Routing Note
 
-```bash
-cd backend
-npm install
+If you look at `frontend/src/utils/api.js`, you will notice we use an Axios instance. By default, it points to `http://localhost:5000/api`. If you ever need to test against the production database, you can override this by creating a `.env` file in the frontend directory and setting `VITE_API_URL`.
 
-# Configure .env (see .env.example)
-# Add your Firebase service account credentials:
-#   FIREBASE_PROJECT_ID=your-project-id
-#   FIREBASE_CLIENT_EMAIL=your-service-account@project.iam.gserviceaccount.com
-#   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+## Deployment
 
-npm run dev    # starts on port 5000
-```
+The application is currently configured for a split deployment:
+*   **Backend:** Hosted on Render. It relies on the `FRONTEND_URL` environment variable to configure CORS properly.
+*   **Frontend:** Hosted on Vercel. It requires a `vercel.json` file to handle SPA routing correctly, preventing 404 errors on direct navigation.
 
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev    # starts on port 5173
-```
-
-### Firebase Setup
-
-1. Create a project at [console.firebase.google.com](https://console.firebase.google.com)
-2. Enable **Email/Password** authentication
-3. Create a **Firestore database**
-4. Generate a **service account key** (Project Settings → Service Accounts)
-5. Add the service account credentials to `backend/.env`
-6. Update `frontend/src/config/firebase.js` with your web app config
-
-## 🔒 Security
-
-- **Server-side token verification** on every API request (Firebase Admin SDK)
-- **Role-based middleware** — API endpoints are guarded by `requireRole()` middleware
-- **Frontend route protection** — `ProtectedRoute` component enforces auth + role
-- **No direct Firestore access** from frontend — all data goes through the Express API
-- **Invite tokens** are single-use with UUID v4 for batch joining
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Auth | Roles | Description |
-|--------|----------|------|-------|-------------|
-| GET | `/api/users/me` | ✅ | All | Get current user profile |
-| POST | `/api/batches` | ✅ | Trainer, Institution | Create batch |
-| POST | `/api/batches/:id/invite` | ✅ | Trainer | Generate invite link |
-| POST | `/api/batches/:id/join` | ✅ | Student | Join batch via token |
-| POST | `/api/sessions` | ✅ | Trainer | Create session |
-| GET | `/api/sessions/:id/attendance` | ✅ | Trainer | View session attendance |
-| POST | `/api/attendance/mark` | ✅ | Student | Mark attendance |
-| GET | `/api/summary/batch/:id` | ✅ | Institution+ | Batch summary |
-| GET | `/api/summary/programme` | ✅ | PM, MO | Programme-wide summary |
-
-## 🎨 UI Features
-
-- **Glassmorphic navbar** with role badges
-- **Role-based sidebar** with dynamic navigation
-- **Responsive design** — works on desktop & mobile
-- **Smooth animations** — fade-in, slide-in transitions
-- **Modern form styling** with validation feedback
-- **Toast notifications** for all user actions
-- **Split-screen auth pages** with gradient branding
-
-## 👤 Contact
-
-See [CONTACT.txt](./CONTACT.txt) for submission details.
+If you have any questions while getting set up, feel free to reach out to the team. Welcome aboard!

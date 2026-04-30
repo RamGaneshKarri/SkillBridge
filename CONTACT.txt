@@ -1,8 +1,11 @@
 Full Name: KARRI RAM GANESH
 Registration Number: 23PA5A1210
-College Email: 23PA5A1210@VISHNU.EDU.IN
-Personal Email: RAMGANESHKARRI7@GMAIL.COM
+Personal Email Id: ramganeshkarri7@gmail.com
+College Email Id: 23pa5a1210@vishnu.edu.in
 Phone Number: 8374547299
 GitHub Profile: https://github.com/ramganeshkarri
 
-Most Challenging Part: Implementing the multi-role authentication flow with server-side role verification middleware, ensuring each of the five roles gets properly scoped access to both API endpoints and frontend views while keeping the invite link system functional across the auth boundary.
+Most Challenging Parts:
+- Managing the multi-role authentication flow. Getting five distinct user roles (Student, Trainer, Institution, Programme Manager, and Monitoring Officer) to play nicely together was tricky.
+- Building out the server-side role verification middleware to make sure each role only has access to the specific data and API endpoints they need.
+- Designing the invite link system. Ensuring the tokens were secure while keeping the batch-joining flow smooth across the authentication boundary took quite a bit of testing and refinement.
