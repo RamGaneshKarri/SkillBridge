@@ -49,7 +49,7 @@ SkillBridge/
 │       ├── components/        # Reusable UI elements (Navbar, Sidebar, Layout)
 │       ├── config/firebase.js # Firebase Client SDK initialization
 │       ├── contexts/          # Contains our AuthContext for global state management
-│       ├── pages/             # View layer, heavily separated by user role
+│       ├── pages/             # View layer, heavily separated by user roles
 │       └── utils/api.js       # Axios instance with global auth interceptors
 └── README.md
 ```
