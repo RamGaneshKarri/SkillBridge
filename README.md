@@ -6,7 +6,7 @@ Welcome to the SkillBridge repository. This full-stack platform is designed to m
 
 *   **Frontend (Live):** `https://skillbridge-attendance23pa5a1210.vercel.app/`
 *   **Backend API (Live):** `https://skillbridge-1g6r.onrender.com`
-*   **API Base URL:** `https://skillbridge-1g6r.onrender.com/api`
+*   **API Base URL:** `https://skillbridge-1g6r.onrender.com/api/health`
 
 ## 2. Test Accounts
 
