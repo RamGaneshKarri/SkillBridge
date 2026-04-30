@@ -89,20 +89,25 @@ const Login = () => {
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-slate-50">
-        <div className="w-full max-w-md animate-fade-in">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-11 h-11 bg-gradient-primary rounded-xl flex items-center justify-center shadow-lg">
-              <FaGraduationCap className="text-white text-xl" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-slate-800">SkillBridge</h1>
-              <p className="text-xs text-slate-400">Attendance System</p>
-            </div>
-          </div>
+      <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 sm:p-12 bg-slate-50 relative overflow-hidden min-h-screen lg:min-h-0">
+        
+        {/* Mobile Background Decoration */}
+        <div className="lg:hidden absolute top-0 left-0 w-full h-80 bg-gradient-primary rounded-b-[3rem] shadow-inner z-0"></div>
+        <div className="lg:hidden absolute top-8 left-8 w-32 h-32 bg-white/10 rounded-full blur-xl z-0"></div>
+        <div className="lg:hidden absolute top-24 right-10 w-24 h-24 bg-white/10 rounded-full blur-xl z-0"></div>
 
-          <div className="mb-8">
+        {/* Mobile Header (Outside the card) */}
+        <div className="lg:hidden relative z-10 flex flex-col items-center text-white mb-8 mt-2 animate-fade-in">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl mb-3 border border-white/20">
+            <FaGraduationCap className="text-3xl text-white" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight drop-shadow-md">SkillBridge</h1>
+          <p className="text-sm text-white/90 mt-1 drop-shadow-md">Attendance System</p>
+        </div>
+
+        <div className="w-full max-w-md animate-fade-in relative z-10 bg-white lg:bg-transparent p-8 lg:p-0 rounded-[2rem] shadow-xl lg:shadow-none border border-slate-100 lg:border-none">
+
+          <div className="mb-8 text-center lg:text-left">
             <h2 className="text-2xl font-bold text-slate-800">Welcome back</h2>
             <p className="text-slate-500 mt-1.5 text-sm">Sign in to your account to continue</p>
           </div>
