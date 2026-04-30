@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Outfit", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 font-sans tracking-tight;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+/* --- PURPLE PREMIUM DESIGN SYSTEM --- */
+
+/* Cards */
+@utility card {
+  @apply bg-white rounded-3xl border border-purple-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden transition-all duration-300;
+}
+
+@utility stat-card {
+  @apply bg-white rounded-3xl p-6 border border-purple-50 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300;
+}
+
+/* Buttons */
+@utility btn-primary {
+  @apply bg-purple-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-purple-700 transition-all duration-300 shadow-[0_4px_14px_0_rgba(147,51,234,0.39)] hover:shadow-[0_6px_20px_rgba(147,51,234,0.23)] active:scale-95 disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer;
+}
+
+@utility btn-secondary {
+  @apply bg-white text-purple-700 px-6 py-3 rounded-2xl font-bold border border-purple-100 hover:bg-purple-50 hover:border-purple-200 transition-all duration-300 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer;
+}
+
+@utility btn-danger {
+  @apply bg-rose-50 text-rose-600 px-5 py-2.5 rounded-2xl font-bold hover:bg-rose-100 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer;
+}
+
+@utility btn-success {
+  @apply bg-emerald-50 text-emerald-600 px-5 py-2.5 rounded-2xl font-bold hover:bg-emerald-100 hover:text-emerald-700 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer;
+}
+
+/* Forms */
+@utility form-input {
+  @apply w-full px-5 py-3.5 rounded-2xl border-2 border-purple-50 bg-slate-50/50 text-slate-800 font-medium focus:outline-none focus:ring-0 focus:border-purple-500 focus:bg-white transition-all duration-300;
+}
+
+@utility form-label {
+  @apply block text-[11px] font-black text-slate-400 mb-2 uppercase tracking-widest;
+}
+
+/* Badges */
+@utility badge {
+  @apply px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest inline-flex items-center gap-1.5 transition-all;
+}
+
+@utility badge-present { @apply bg-emerald-50 text-emerald-600 border border-emerald-100; }
+@utility badge-absent { @apply bg-rose-50 text-rose-600 border border-rose-100; }
+@utility badge-late { @apply bg-amber-50 text-amber-600 border border-amber-100; }
+@utility badge-primary { @apply bg-purple-50 text-purple-600 border border-purple-100; }
+
+/* Tables */
+@utility table-container {
+  @apply overflow-x-auto border border-purple-50 rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.02)];
+}
+
+.table-container table {
+  @apply min-w-full divide-y divide-purple-50 bg-white;
+}
+
+.table-container th {
+  @apply px-6 py-5 bg-purple-50/50 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-purple-50;
+}
+
+.table-container td {
+  @apply px-6 py-4 text-sm font-medium text-slate-600 border-b border-purple-50/30;
+}
+
+/* Layout */
+@utility bg-gradient-primary {
+  @apply bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800;
+}
+
+/* Animations */
+@utility animate-premium {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* Empty States */
+@utility empty-state {
+  @apply py-16 flex flex-col items-center justify-center text-center text-slate-400 bg-purple-50/30 rounded-3xl border border-purple-50/50 border-dashed;
+}
+
+/* Glassmorphism */
+@utility glass {
+  @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)];
+}
