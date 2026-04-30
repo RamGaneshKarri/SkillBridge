@@ -4,9 +4,9 @@ Welcome to the SkillBridge repository. This full-stack platform is designed to m
 
 ## 1. Live URLs
 
-*   **Frontend (Live):** `[Insert Vercel URL]`
-*   **Backend API (Live):** `[Insert Render URL]`
-*   **API Base URL:** `[Insert Backend URL]/api`
+*   **Frontend (Live):** `https://skillbridge-attendance23pa5a1210.vercel.app/`
+*   **Backend API (Live):** `https://skillbridge-1g6r.onrender.com`
+*   **API Base URL:** `https://skillbridge-1g6r.onrender.com/api`
 
 ## 2. Test Accounts
 
