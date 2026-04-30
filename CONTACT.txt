@@ -8,4 +8,4 @@ GitHub Profile: https://github.com/ramganeshkarri
 Most Challenging Parts:
 - Managing the multi-role authentication flow. Getting five distinct user roles (Student, Trainer, Institution, Programme Manager, and Monitoring Officer) to play nicely together was tricky.
 - Building out the server-side role verification middleware to make sure each role only has access to the specific data and API endpoints they need.
-- Designing the invite link system. Ensuring the tokens were secure while keeping the batch-joining flow smooth across the authentication boundary took quite a bit of testing and refinement.
+- Designing the invite link system. Ensuring the tokens were secure while keeping the batch-joining flow smooth across the authentication boundary took quite a bit of testing & refinement.
