@@ -1,37 +1,84 @@
 # SkillBridge: Role-Based Attendance Management System
 
-Welcome to the SkillBridge repository. If you are just joining the team, this document will give you a clear overview of what this project is, how the architecture is set up, and how you can get it running on your local machine.
+Welcome to the SkillBridge repository. This full-stack platform is designed to manage attendance across state-level skilling programmes, featuring a multi-tenant, multi-role architecture.
 
-## Project Overview
+## 1. Live URLs
 
-SkillBridge is a full-stack platform designed to manage attendance across state-level skilling programmes. The core complexity of this application lies in its multi-tenant, multi-role design. We have five distinct user roles that interact with the system in completely different ways. 
+*   **Frontend (Live):** `[Insert Vercel URL]`
+*   **Backend API (Live):** `[Insert Render URL]`
+*   **API Base URL:** `[Insert Backend URL]/api`
 
-Our goal with this platform is to allow trainers and students to handle the day-to-day operations (like marking attendance and joining batches), while providing high-level, aggregated analytics to institutions and programme managers.
+## 2. Test Accounts
 
-### The Five User Roles
+Use the following credentials to explore the different Role-Based Access Control (RBAC) levels:
 
-To understand the codebase, you first need to understand who is using it. Here is how permissions are divided:
+*   **Institution:**
+    *   Email: `adityauniversity@gmail.com`
+    *   Password: `Aditya@123`
+*   **Trainer:**
+    *   Email: `meghnasree@gmail.com`
+    *   Password: `Meghna@123`
+*   **Student:**
+    *   Email: `sandeepnune@123`
+    *   Password: `Sandeep@123`
+*   **Programme Manager:**
+    *   Email: `ramganeshkarri@gmail.com`
+    *   Password: `[Please update password here]`
+*   **Monitoring Officer:**
+    *   Email: `sachinguthala@gmail.com`
+    *   Password: `Sachin@123`
 
-*   **Student**: The end-user. They can view the batches they are enrolled in, join new batches using secure invite links, and log their daily attendance.
-*   **Trainer**: The ground-level operators. They are responsible for creating batches, generating invite links for students, creating daily sessions, and reviewing attendance logs.
-*   **Institution**: The administrative layer. Institutions manage their trainers and have access to dashboard summaries to see how their specific batches are performing.
-*   **Programme Manager**: The high-level overseer. They have access to system-wide analytics, allowing them to track performance across all institutions simultaneously.
-*   **Monitoring Officer**: A strict read-only role. They can view the same high-level data as Programme Managers but cannot modify any records.
+## 3. Setup Instructions (Local Development)
 
-## Architecture and Design Decisions
+To run the application locally, you will need Node.js installed and access to the Firebase project for authentication and database services.
+
+### Backend Setup
+1. Navigate to the backend directory: `cd backend`
+2. Install dependencies: `npm install`
+3. Add the `serviceAccountKey.json` to the `backend/` directory, OR set the `FIREBASE_SERVICE_ACCOUNT_KEY` environment variable.
+4. Start the server: `npm run dev` (Runs on `http://localhost:5000`)
+
+### Frontend Setup
+1. Navigate to the frontend directory: `cd frontend`
+2. Install dependencies: `npm install`
+3. Set your `.env` variables if necessary (e.g., `VITE_API_URL=http://localhost:5000/api`).
+4. Start the dev server: `npm run dev` (Runs on `http://localhost:5173`)
+
+## 4. Schema Decisions
+
+*   **NoSQL / Firestore:** Chose Firestore for its rapid prototyping capabilities and flexible schema definition.
+*   **Denormalization:** Data is intentionally denormalized (e.g., embedding basic student info inside attendance records) to minimize the number of reads and improve query performance for dashboard aggregations.
+*   **Hierarchical Structure:** The core relational flow is `Institutions -> Trainers -> Batches -> Sessions -> Attendance`. Since Firestore doesn't do joins, references (IDs) to parent documents are stored on child documents to facilitate querying.
+
+## 5. Stack Choices
+
+*   **Frontend (React 19, Vite 8, Tailwind CSS 4):** Chosen for a high-performance developer experience and rapid UI styling. The custom RBAC routing layer efficiently intercepts and handles role-based access.
+*   **Backend (Node.js, Express):** Lightweight and highly customizable. It serves purely as an API and security middleware layer to interface with Firebase.
+*   **Auth & Database (Firebase):** Diverged from a traditional SQL/JWT setup to use Firebase Authentication and Firestore. This significantly accelerated the development of secure authentication and token validation, while providing a scalable database out-of-the-box.
+
+## 6. Project Status
+
+*   **Fully Working:**
+    *   Complete end-to-end multi-role authentication (RBAC).
+    *   Secure route protection (frontend and backend).
+    *   Batch creation, session management, and student attendance logging workflows.
+*   **Partially Done:**
+    *   High-level analytics dashboards for Programme Managers and Institutions (data is fetched and displayed, but visualizations and deep filtering are basic).
+*   **Skipped:**
+    *   Automated email notifications and PDF report generation due to project time constraints.
+
+## 7. Future Improvements (What I would do differently)
+
+With more time, **I would migrate the database to a relational SQL database (like PostgreSQL) using Prisma ORM.** While Firestore was excellent for speed and flexibility during initial development, the heavily relational nature of attendance tracking (Students -> Batches -> Sessions) inherently lends itself better to SQL joins. This would simplify complex analytics queries and guarantee stronger relational data integrity in the long run.
+
+## 8. Architecture and Design Decisions
 
 We went with a MERN-like stack, but opted to lean heavily into Firebase for authentication and database management to reduce infrastructure overhead.
-
-**Frontend:**
-The client is built with React 19 and Vite 8, utilizing Tailwind CSS 4 for styling. We built a custom Role-Based Access Control (RBAC) layer into the frontend using a `ProtectedRoute` component that intercepts navigation attempts and verifies both authentication status and role access.
-
-**Backend:**
-The server is a standard Node.js and Express application. It acts as a middleman between the client and our Firestore database. We use the Firebase Admin SDK to interact with the database securely.
 
 **Security Philosophy:**
 We do not rely on the frontend for security. Every single API route is protected by token verification middleware. Furthermore, sensitive routes are wrapped in a `roleCheck` middleware. Even if a user manages to spoof their role on the frontend, the server will reject unauthorized database reads/writes.
 
-## Repository Structure
+## 9. Repository Structure
 
 The codebase is split into two main directories. Here is a quick map to help you navigate:
 
@@ -53,36 +100,3 @@ SkillBridge/
 │       └── utils/api.js       # Axios instance with global auth interceptors
 └── README.md
 ```
-
-## Local Development Setup
-
-To get the application running on your local machine, you will need Node.js installed and access to our Firebase project.
-
-### 1. Start the Backend
-
-1. Navigate to the backend directory: `cd backend`
-2. Install dependencies: `npm install`
-3. You will need the service account credentials. Ask a team lead for the `serviceAccountKey.json` file and place it in the root of the `backend/` directory, OR set the `FIREBASE_SERVICE_ACCOUNT_KEY` environment variable.
-4. Start the development server: `npm run dev`
-
-The backend should now be running on port 5000.
-
-### 2. Start the Frontend
-
-1. Open a new terminal and navigate to the frontend directory: `cd frontend`
-2. Install dependencies: `npm install`
-3. Start the Vite development server: `npm run dev`
-
-The frontend should now be running on port 5173.
-
-### 3. API Routing Note
-
-If you look at `frontend/src/utils/api.js`, you will notice we use an Axios instance. By default, it points to `http://localhost:5000/api`. If you ever need to test against the production database, you can override this by creating a `.env` file in the frontend directory and setting `VITE_API_URL`.
-
-## Deployment
-
-The application is currently configured for a split deployment:
-*   **Backend:** Hosted on Render. It relies on the `FRONTEND_URL` environment variable to configure CORS properly.
-*   **Frontend:** Hosted on Vercel. It requires a `vercel.json` file to handle SPA routing correctly, preventing 404 errors on direct navigation.
-
-If you have any questions while getting set up, feel free to reach out to the team. Welcome aboard!
