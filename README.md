@@ -19,7 +19,7 @@ Use the following credentials to explore the different Role-Based Access Control
     *   Email: `meghnasree@gmail.com`
     *   Password: `Meghna@123`
 *   **Student:**
-    *   Email: `sandeepnune@123`
+    *   Email: `sandeepnune@gmail.com`
     *   Password: `Sandeep@123`
 *   **Programme Manager:**
     *   Email: `ramganeshkarri@gmail.com`
